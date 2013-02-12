@@ -1,21 +1,37 @@
 ========
-Tfidf.py
+tfidf.py
 ========
 
-Similarity made easy!
+What is in the name
+-------------------
+
+Wiki definition (http://en.wikipedia.org/wiki/Tf-idf):
+
+    Tf–idf, term frequency–inverse document frequency, is a numerical statistic
+    which reflects how important a word is to a document in a collection or corpus.
+    
+    It is often used as a weighting factor in information retrieval and text mining.
+    The tf-idf value increases proportionally to the number of times a word appears
+    in the document, but is offset by the frequency of the word in the corpus, which
+    helps to control for the fact that some words are generally more common than
+    others.
+
+So, tfidf.py is a tf-idf algorithm implementation , simply helps you create a corpus
+of documents which you can query it to find similiar documents for a given input.
+
+Basically, tfidf.py is your best friend, while you are trying to approach what the
+actual input meant to be using your pre-indexed document base.
+This is the approach what Lucene (the most popular java full text search engine)
+uses in backyard (http://lucene.apache.org/core/old_versioned_docs/versions/2_9_0/api/all/org/apache/lucene/search/Similarity.html)
 
 
-What is in the name of?
------------------------
+Quickstart
+----------
 
-Tfidf.py (term frequency–inverse document frequency) is a text similarity
-ranking library helps you find and match similar text entries in a document
-corpus.
-
-So?
----
-
-Let's take a look the example below::
+Let's take a look the example below. Currently a document defined as a ``(id, content)`` tuple and
+we are going to create a corpus with a bunch of idioms using these document tuples. Once the corpus
+created, under the hood, our idioms are automatically indexed and weighted which is meant to be ready
+for querying::
 
     >>> from tfidf.corpus import Corpus
 
@@ -36,23 +52,27 @@ Let's take a look the example below::
     >>> resutls = corpus.query('Hit the nail', min_score=0.2)
     [(6, 0.6134307406647964, 4), (4, 0.2928327297980855, 4)]
 
-We tried to find similiar idioms by our input ``Hit the nail`` with a
-minimum similarity score of ``0.2``. The returned list of objects contains
-the information about matched items in corresponding corpus.
-In this case there two matched items of ids ``6`` and ``4`` with
-similarity scores ``0.6134307406647964`` and ``0.2928327297980855`` beside the
-total match count of ``4``
+We tried to find similiar idioms by our input ``Hit the nail`` with a minimum similarity score of
+``0.2``. The returned list of objects contains the information about matched items in corresponding
+corpus. In this case there two matched items of ids ``6`` and ``4`` with similarity scores
+``0.6134307406647964`` and ``0.2928327297980855`` beside the total match count of ``4``
 
-This means there are 4 matched results. Two of them are above the ``min_score``
-threshold those are::
+This means there are 4 matched results. Two of them are above the ``min_score`` threshold those are::
 
     * Hit the nail on the head (0.613)
     * Hit the books (0.292)
 
-More documentation is coming soon, so please stay tuned.
+Documentation
+-------------
 
-Enjoy!
+Coming soon...
 
+
+Contributors
+------------
+
+* Mumin Ozturk (`@mumino <http://github.com/mumino>`_)
+* Kadir Pekel (`@kadirpekel <http://github.com/kadirpekel>`_)
 
 License
 -------
