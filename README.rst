@@ -32,7 +32,7 @@ idioms using these document tuples. Once the corpus created, under the hood,
 our idioms are automatically indexed and weighted which is meant to be ready
 for querying::
 
-    >>> from korpus.corpus import Corpus
+    >>> from korpus import Corpus
 
     >>> common_idioms = [
         (1, 'Piece of cake'),
