@@ -1,5 +1,6 @@
 from collections import defaultdict
-from itertools import chain
+from itertools import imap, ifilter, chain
+from operator import itemgetter
 import math
 
 
@@ -16,8 +17,8 @@ def ngrams(token, MIN_N=2, MAX_N=6):
     :rtype: generator
     '''
     n_tokens = len(token)
-    for i in xrange(n_tokens):
-        for j in xrange(i + MIN_N, min(n_tokens, i + MAX_N) + 1):
+    for i in range(n_tokens):
+        for j in range(i + MIN_N, min(n_tokens, i + MAX_N) + 1):
             yield token[i:j]
 
 
@@ -127,3 +128,44 @@ def cosine_similarity(doc1, doc2, weighting_factor):
     upper = sum(doc1[key] * doc2[key] * math.pow(weighting_factor[key], 2)
                 for key in intersection)
     return math.sqrt((upper * upper) / (doc1sum * doc2sum))
+
+
+class Corpus(object):
+
+    def __init__(self, docs,
+                 preprocessor=lambda x: x,
+                 tokenizer=tokenizer):
+        self.tokenizer = tokenizer
+        self.preprocessor = preprocessor
+        term_vectors = {}
+        inverse_term_vectors = defaultdict(set)
+        for pk, value in docs:
+            tokens = self.tokenizer(self.preprocessor(value))
+            term_vectors[pk] = tf(tokens)
+            map(lambda ngram: inverse_term_vectors[ngram].add(pk),
+                tokens.iterkeys())
+
+        self.idf_dict = idf(inverse_term_vectors)
+        self.term_vectors = term_vectors
+        self.inverse_term_vectors = inverse_term_vectors
+
+    def query(self, text, min_score=0.8, subset=None):
+        tokens = self.tokenizer(self.preprocessor(text))
+        terms = tf(tokens)
+        similar_docs = set()
+        for term in terms.iterkeys():
+            map(similar_docs.add, self.inverse_term_vectors[term])
+        if subset is not None:
+            similar_docs = similar_docs.intersection(subset)
+
+        similar_docs_length = len(similar_docs)
+
+        def score_yielder(similar_doc):
+            score = cosine_similarity(terms,
+                                      self.term_vectors[similar_doc],
+                                      self.idf_dict)
+            if score > min_score:
+                return similar_doc, score, similar_docs_length
+
+        return sorted(ifilter(None, imap(score_yielder, similar_docs)),
+                      key=itemgetter(1), reverse=True)
