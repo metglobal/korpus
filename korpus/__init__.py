@@ -2,7 +2,7 @@ from collections import defaultdict
 from itertools import imap, ifilter
 from operator import itemgetter
 
-from tfidf.utils import tokenizer, idf, tf, cosine_similarity
+from korpus.utils import tokenizer, idf, tf, cosine_similarity
 
 
 class Corpus(object):

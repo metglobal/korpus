@@ -3,11 +3,11 @@ import math
 from collections import defaultdict
 from mock import patch, call
 
-from tfidf.utils import (ngrams, tokenizer, tf, cardinality, idf,
-                         cosine_similarity)
+from korpus.utils import (ngrams, tokenizer, tf, cardinality, idf,
+                          cosine_similarity)
 
 
-class TFIDFTest(unittest.TestCase):
+class TestUtils(unittest.TestCase):
 
     def test_ngrams(self):
         s = "1234567 abcd"
@@ -31,7 +31,7 @@ class TFIDFTest(unittest.TestCase):
                              sorted(tokens))
 
     def test_tokenizer(self):
-        with patch('tfidf.utils.ngrams') as ngrams_mock:
+        with patch('korpus.utils.ngrams') as ngrams_mock:
 
             s = 'tested-string-is-this-and-this-goes-on'
             ngrams_calls = []
