@@ -1,0 +1,1 @@
+include README.rst LICENSE requirements.txt runtests.sh test_korpus.py
