@@ -1,10 +1,9 @@
 import unittest
-import math
 from collections import defaultdict
 from mock import patch, call
 
-from korpus.utils import (ngrams, tokenizer, tf, cardinality, idf,
-                          cosine_similarity)
+from korpus import (ngrams, tokenizer, tf, cardinality, idf,
+                    cosine_similarity, Corpus)
 
 
 class TestUtils(unittest.TestCase):
@@ -31,12 +30,12 @@ class TestUtils(unittest.TestCase):
                              sorted(tokens))
 
     def test_tokenizer(self):
-        with patch('korpus.utils.ngrams') as ngrams_mock:
+        with patch('korpus.ngrams') as ngrams_mock:
 
             s = 'tested-string-is-this-and-this-goes-on'
             ngrams_calls = []
 
-            def  ngrams_mock_side_effect(token, MIN_N=2, MAX_N=6):
+            def ngrams_mock_side_effect(token, MIN_N=2, MAX_N=6):
                 ngrams_calls.append(call(token, MIN_N, MAX_N))
                 return []
 
@@ -52,7 +51,7 @@ class TestUtils(unittest.TestCase):
             return_value = ['a', 'b', 'c', 'd']
             ngrams_calls = []
 
-            def  ngrams_mock_side_effect2(token, MIN_N=2, MAX_N=6):
+            def ngrams_mock_side_effect2(token, MIN_N=2, MAX_N=6):
                 ngrams_calls.append(call(token, MIN_N, MAX_N))
                 return return_value
 
@@ -84,11 +83,9 @@ class TestUtils(unittest.TestCase):
     def test_idf(self):
         inverse_term_vector = {'a': [1, 2],
                                'b': [2, 3, 4, 5, 6],
-                               'c': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-                                     13, 14, 15, 16, 17, 18, 19, 20]}
+                               'c': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
         ret = idf(inverse_term_vector)
-        expected = defaultdict(int, c=0, b=math.log(4), a=math.log(10))
-        self.assertDictEqual(ret, expected)
+        self.assertTrue(ret['a'] > ret['b'] > ret['c'])
 
     def test_cosine_similarity(self):
         idf_dict = defaultdict(lambda: 1)
@@ -114,3 +111,10 @@ class TestUtils(unittest.TestCase):
 
     def test_index(self):
         pass
+
+
+class TestKorpus(unittest.TestCase):
+    def test_korpus_containing_one_doc(self):
+        corpus = Corpus([(5, 'Piece of cake')])
+        ret = corpus.query('Piece of cake')
+        self.assertEqual(ret, [(5, 1.0, 1)])

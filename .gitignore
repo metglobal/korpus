@@ -2,6 +2,8 @@
 *~
 \#*\#
 \.\#*
+.*.sw[pon]
+tags
 TAGS
 docs/_build
 docs/api

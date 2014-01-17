@@ -1,2 +1,2 @@
-#! /bin/sh
-nosetests korpus
+#!/bin/sh
+nosetests

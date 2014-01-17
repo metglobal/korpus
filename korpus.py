@@ -64,28 +64,28 @@ def cardinality(bitset):
      the set". In python, len(set) is cardinality. But we use int as set.
      Our cardinality is number of 1 bits in int.
 
-     >>> cardinality(0) # 0b0 as set()
-     0
-     >>> cardinality(1) # 0b1 as set([1])
-     1
-     >>> cardinality(2) # 0b10 as set([2])
-     1
-     >>> cardinality(3) # 0b11 as set([1,2])
-     2
-     >>> cardinality(5) # 0b101 as set([[1,3])
-     2
-     >>> cardinality(13) # 0b1101 as set([1, 3, 4])
-     3
+    >>> cardinality(0) # 0b0 as set()
+    0
+    >>> cardinality(1) # 0b1 as set([1])
+    1
+    >>> cardinality(2) # 0b10 as set([2])
+    1
+    >>> cardinality(3) # 0b11 as set([1,2])
+    2
+    >>> cardinality(5) # 0b101 as set([[1,3])
+    2
+    >>> cardinality(13) # 0b1101 as set([1, 3, 4])
+    3
 
     :param bitset: int whose bytes are set
     :type word: int
     '''
-    binary = 1
-    cardinality = 0
-    while(bitset >= binary):
-        cardinality += 1 if bool(bitset & binary) else 0
-        binary <<= 1
 
+    cardinality = 0
+    while bitset:
+        if bitset & 1:
+            cardinality += 1
+        bitset >>= 1
     return cardinality
 
 
@@ -103,7 +103,7 @@ def idf(inverse_term_vectors):
     total_num_docs = cardinality(bitset)
     idf_dict = defaultdict(int)
     for term, docs in inverse_term_vectors.iteritems():
-        idf_dict[term] = math.log(total_num_docs / len(docs))
+        idf_dict[term] = math.log(total_num_docs / (1.0 + len(docs)))
     return idf_dict
 
 
